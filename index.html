@@ -521,9 +521,9 @@ class Fighter{
       if(mv.kind==='cry'){ trap(this,opp,mv,dt,150);
       } else if(mv.kind==='petrol'){
         if(!this.pbSplash){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+40);
-          if(gap>0) this.x+=this.dir*Math.min(gap,1100*dt); else if(rnd()<dt*30) drip(this);
-          if((gap<=6 && opp.state!=='ko') || this.t>.75){ this.pbSplash=this.t; sfx.splash(); splashFx(this,opp);
-            if(gap<=60 && opp.state!=='ko' && G.phase==='fight' && opp.grounded){ opp.set('slipping'); opp.slipBy=this; puddles.push({x:opp.x,t:0,life:4}); } else this.pbFail=true; } }
+          if(gap>0) this.x+=this.dir*Math.min(gap,1700*dt); else if(rnd()<dt*30) drip(this);
+          if((gap<=6 && opp.state!=='ko') || this.t>1.3){ this.pbSplash=this.t; sfx.splash(); splashFx(this,opp);
+            if(gap<=60 && opp.state!=='ko' && G.phase==='fight' && opp.y>-260){ opp.y=0; opp.vy=0; opp.set('slipping'); opp.slipBy=this; puddles.push({x:opp.x,t:0,life:4}); } else this.pbFail=true; } }
         else if(!this.pbFail && !this.pbLift){ if(opp.state!=='slipping') this.pbFail=true; else if(this.t>=this.pbSplash+.55){ this.pbLift=this.t; opp.set('lifted'); opp.liftBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'POWERBOMB',1); } }
         else if(this.pbLift && !this.pbImpact){
           if(opp.state!=='lifted'){ this.pbFail=true; this.pbImpact=this.t; }
@@ -531,14 +531,14 @@ class Fighter{
             if(!this.pbJump && this.t>=this.pbLift+.45){ this.pbJump=true; this.vy=-430; }
             if(this.pbJump && this.grounded && this.t>this.pbLift+.6){ this.pbImpact=this.t; Object.assign(this.pose,this.target()); opp.set('idle'); opp.y=0; opp.x=clamp(this.x+this.dir*(this.half+opp.half+20),70,W-70);
               sfx.slam(); shake=28; hitstop=.18; dust(opp); banner('POWERBOMB!',{big:true,red:true});
-              opp.takeHit({dmg:mv.dmg,push:20,heavy:true,meter:0},this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.t=.09; Object.assign(opp.pose,opp.target()); opp.floorBack=true; opp.kx=0; } } } }
+              opp.takeHit({dmg:mv.dmg,push:20,heavy:true,meter:0,unblock:true},this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.t=.09; Object.assign(opp.pose,opp.target()); opp.floorBack=true; opp.kx=0; } } } }
         const pend=this.pbImpact?this.pbImpact+.45:this.pbFail?(this.pbSplash||this.t)+.45:1e9;
         if(this.t>=pend || this.t>3.2) this.set('idle');
       } else if(mv.kind==='flurry'){
         if(!this.flT && !this.flFail){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+34);
-          if(gap>0) this.x+=this.dir*Math.min(gap,1400*dt);
-          if(gap<=6 && opp.grounded && opp.state!=='ko' && G.phase==='fight'){ this.flT=this.t; this.flN=0; this.lastTick=-1; opp.set('pummeled'); opp.pumBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'20 PUNCHES',1); }
-          else if(this.t>.6) this.flFail=true; }
+          if(gap>0) this.x+=this.dir*Math.min(gap,1900*dt);
+          if(gap<=6 && opp.y>-260 && opp.state!=='ko' && G.phase==='fight'){ opp.y=0; opp.vy=0; this.flT=this.t; this.flN=0; this.lastTick=-1; opp.set('pummeled'); opp.pumBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'20 PUNCHES',1); }
+          else if(this.t>1.2) this.flFail=true; }
         else if(this.flT && !this.flEnd){
           if(opp.state!=='pummeled'){ this.flEnd=this.t; }
           else { const i=Math.floor((this.t-this.flT-.04)/mv.gap);
@@ -546,7 +546,7 @@ class Fighter{
             if(i>this.lastTick && i<mv.hits){ this.lastTick=i; this.flN=i+1; const hy=GROUND-(opp.d.torso+104*opp.d.ls)-10-rnd()*60;
               if(i<mv.hits-1){ sfx.hit(); sparks(opp.x-this.dir*opp.half*.4,hy,this.dir,['#fff3b0','#ff5a3c','#fff'],5); hurt(opp,this,i%2?2:1); shake=Math.max(shake,6); }
               else { this.flEnd=this.t; opp.set('idle'); sfx.heavy(); hitstop=.16; shake=22; banner('20 HIT COMBO!',{big:true,red:true});
-                opp.takeHit({dmg:mv.final,push:mv.push,heavy:true,meter:0},this,opp.x,hy-40); } } } }
+                opp.takeHit({dmg:mv.final,push:mv.push,heavy:true,meter:0,unblock:true},this,opp.x,hy-40); } } } }
         const fend=this.flEnd?this.flEnd+.45:this.flFail?this.t:1e9; if(this.t>=fend) this.set('idle');
       } else if(mv.kind==='cheat'){
         if(!this.cheatOn){ this.cheatOn=true; sfx.glitch(); }
@@ -561,14 +561,14 @@ class Fighter{
       } else if(mv.kind==='rage'){
         if(this.t<mv.shout){ if(!this.rageSaid){ this.rageSaid=true; this.say={txt:mv.line,t:0}; speak(mv.voice); sfx.rage(); } if(rnd()<dt*35) steam(this); }
         else if(!this.sxT && !this.sxFail){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+8);
-          if(gap>0) this.x+=this.dir*Math.min(gap,1500*dt);
-          if(gap<=6 && opp.grounded && opp.state!=='ko' && G.phase==='fight'){ this.sxT=this.t; opp.set('suplexed'); opp.sxBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'SUPLEX',1); }
-          else if(this.t>mv.shout+.5) this.sxFail=true; }
+          if(gap>0) this.x+=this.dir*Math.min(gap,1900*dt);
+          if(gap<=6 && opp.y>-260 && opp.state!=='ko' && G.phase==='fight'){ opp.y=0; opp.vy=0; this.sxT=this.t; opp.set('suplexed'); opp.sxBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'SUPLEX',1); }
+          else if(this.t>mv.shout+1.1) this.sxFail=true; }
         else if(this.sxT && !this.sxLand){ const k=clamp((this.t-this.sxT)/mv.flip,0,1), R=this.half+opp.half+6;
           if(opp.state!=='suplexed'){ this.sxFail=true; this.sxLand=this.t; }
           else { const e=k*k*(3-2*k), h=lerp(110,40,e)+200*Math.sin(e*Math.PI); opp.sxK=e; opp.x=clamp(this.x+this.dir*R*Math.cos(e*Math.PI),40,W-40); opp.y=-(h-110); opp.vy=0; opp.dir=-this.dir;
             if(k>=1){ this.sxLand=this.t; Object.assign(this.pose,this.target()); opp.set('idle'); opp.y=0; opp.x=clamp(this.x-this.dir*(R*.55),40,W-40); sfx.slam(); shake=24; hitstop=.14; dust(opp);
-              banner('SUPLEX!',{big:true,red:true}); opp.takeHit(mv,this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.floorBack=false; opp.kx=0; opp.t=.09; Object.assign(opp.pose,opp.target()); } } } }
+              banner('SUPLEX!',{big:true,red:true}); opp.takeHit({...mv,unblock:true},this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.floorBack=false; opp.kx=0; opp.t=.09; Object.assign(opp.pose,opp.target()); } } } }
         const rend=this.sxLand?this.sxLand+.42:this.sxFail?this.t:1e9; if(this.t>=rend) this.set('idle');
       } else if(mv.kind==='standup'){
         const JOKES=['Is this mic on?','So I went to the gym...','...and the gym went to me!','Why did the dumbbell cry?','It had no spotter!','Ba dum tss!'];
@@ -599,16 +599,16 @@ class Fighter{
       if(this.t>=m2.puffAt && this.t<m2.puffAt+.45 && rnd()<dt*50){ const y=GROUND+this.y-(d.torso+104*d.ls)-40; fx.push({x:this.x+this.dir*30,y,vx:this.dir*(260+rnd()*200),vy:-40+rnd()*60,t:0,life:.8,c:'rgba(200,200,205,.8)',r:10,g:-60}); }
       // finisher: charge through the smoke, lock the arms, hop, face-first slam
       if(this.t>=m2.dashAt && !this.pdStart && !this.pdSkip){
-        if(opp.state==='ko' || G.phase!=='fight' || Math.abs(opp.x-this.x)>650) this.pdSkip=true; else this.pdStart=this.t; }
+        if(opp.state==='ko' || G.phase!=='fight' || Math.abs(opp.x-this.x)>1300) this.pdSkip=true; else this.pdStart=this.t; }
       if(this.pdStart && !this.bT){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+12);
-        if(gap>0) this.x+=this.dir*Math.min(gap,1500*dt);
-        if(gap<=6 && opp.grounded && opp.state!=='ko'){ this.bT=this.t; opp.set('busted'); opp.bustedBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'PEDIGREE',1); }
-        else if(this.t-this.pdStart>.55) this.pdSkip=true; }
+        if(gap>0) this.x+=this.dir*Math.min(gap,1900*dt);
+        if(gap<=6 && opp.y>-260 && opp.state!=='ko'){ opp.y=0; opp.vy=0; this.bT=this.t; opp.set('busted'); opp.bustedBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'PEDIGREE',1); }
+        else if(this.t-this.pdStart>1.1) this.pdSkip=true; }
       if(this.bT && !this.impactT){
         opp.x=this.x+this.dir*(this.half+opp.half-34); opp.y=this.y*.85; opp.vy=0; opp.dir=-this.dir;
         if(!this.hopped && this.t>=this.bT+.22){ this.hopped=true; this.vy=-640; }
         if(this.hopped && this.grounded && this.t>this.bT+.3){ this.impactT=this.t; Object.assign(this.pose,this.target()); opp.set('idle'); sfx.slam(); shake=26; hitstop=.18; dust(this); opp.x=this.x+this.dir*(this.half+opp.half+10);
-          banner('PEDIGREE!',{big:true,red:true}); opp.takeHit({dmg:m2.pdDmg,push:50,heavy:true,meter:0},this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.t=.09; Object.assign(opp.pose,opp.target()); opp.kx=0; } } }
+          banner('PEDIGREE!',{big:true,red:true}); opp.takeHit({dmg:m2.pdDmg,push:50,heavy:true,meter:0,unblock:true},this,opp.x,GROUND-40); if(opp.state==='hit'){ opp.set('floored'); opp.t=.09; Object.assign(opp.pose,opp.target()); opp.kx=0; } } }
       const endAt=this.impactT?this.impactT+.4:(this.pdSkip||!this.pdStart)?m2.dur:1e9;
       if(this.t>=endAt && (this.pdSkip||this.impactT||this.t>=m2.dashAt)) this.set('idle');
     } else if(s==='slipping'){ this.x+=Math.sin(this.t*22)*90*dt; if(!this.slipBy || this.slipBy.state!=='special') this.set('idle');
@@ -639,9 +639,12 @@ class Fighter{
     this.x=clamp(this.x,70,W-70);
     const k=Math.min(1,dt*(this.state==='walk'?14:26)), tg=this.target(); for(const key in tg) this.pose[key]=lerp(this.pose[key],tg[key],k);
   }
+  slamming(){ const m=this.d.moves; if(this.state==='special') return ['rage','petrol','flurry'].includes(m.special.kind); if(this.state==='special2') return !!m.special2 && ['smoke','sleep'].includes(m.special2.kind); return false; }
   takeHit(mv,att,hx,hy){
-    if(this.state==='ko'||G.phase!=='fight'||this.inv>0) return;
-    const blocking=this.state==='block' && Math.sign(att.x-this.x)===this.dir;
+    if(this.state==='ko'||G.phase!=='fight'||(this.inv>0&&!mv.unblock)) return;
+    const blocking=!mv.unblock && this.state==='block' && Math.sign(att.x-this.x)===this.dir;
+    if(this.slamming() && !mv.unblock){ const dm=Math.max(1,Math.round(mv.dmg*.5)); this.hp=Math.max(0,this.hp-dm); nums.push({x:hx,y:hy-20,v:dm,t:0,c:'#ffb070'}); sfx.block(); sparks(hx,hy,att.dir,['#ffd23f','#fff'],8); att.meter=Math.min(100,att.meter+(mv.meter||0)*.5);
+      if(this.hp<=0){ this.set('ko'); this.vy=-520; this.kx=att.dir*320; sfx.ko(); endRound(att,'K.O.!'); } return; }
     let dmg=mv.dmg;
     if(blocking){ dmg=Math.max(1,Math.round(dmg*.15)); sfx.block(); this.kx=att.dir*mv.push*3; sparks(hx,hy,att.dir,['#bfefff','#fff'],8); this.meter=Math.min(100,this.meter+2); }
     else { this.set('hit'); this.stun=mv.heavy?.42:.3; this.kx=att.dir*mv.push*6; if(!this.grounded) this.vy=-250;
@@ -834,7 +837,7 @@ function trap(f,opp,mv,dt,hitY){
   if(mv.kind==='sleep' && f.rkoT){
     if(!f.rkoLand){ opp.x=f.x+f.dir*(f.half+opp.half-30); opp.y=Math.min(0,f.y*.35); opp.vy=0; opp.dir=-f.dir;
       if(f.grounded && f.t>f.rkoT+.2){ f.rkoLand=f.t; Object.assign(f.pose,f.target()); sfx.slam(); shake=24; hitstop=.16; dust(f); banner('RKO!',{big:true,red:true});
-        opp.set('idle'); opp.y=0; opp.takeHit({dmg:mv.dmg,push:30,heavy:true,meter:0},f,opp.x,GROUND-60);
+        opp.set('idle'); opp.y=0; opp.takeHit({dmg:mv.dmg,push:30,heavy:true,meter:0,unblock:true},f,opp.x,GROUND-60);
         if(opp.state==='hit'){ opp.set('floored'); opp.t=.09; Object.assign(opp.pose,opp.target()); opp.floorBack=false; opp.kx=0; } } }
     else if(f.t>f.rkoLand+.75) f.set('idle');
     return; }
