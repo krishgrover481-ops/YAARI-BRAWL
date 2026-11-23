@@ -367,7 +367,7 @@ const sfx={ swing:()=>noise(.12,.25,1800), hit:()=>{noise(.15,.7,600);tone(160,5
   block:()=>tone(900,500,.08,'square',.12), zap:()=>tone(500,1800,.35,'sawtooth',.12), spin:()=>noise(.5,.35,900), ko:()=>tone(300,60,.8,'triangle',.4), cry:()=>[0,280,560].forEach((t,i)=>setTimeout(()=>tone(720-i*50,360,.3,'triangle',.2),t)), power:()=>tone(140,900,.65,'sawtooth',.12), grab:()=>{noise(.15,.5,500);tone(200,140,.2,'square',.1);}, splash:()=>{noise(.55,.45,1300);setTimeout(()=>noise(.3,.3,700),200);}, laugh:()=>{ if(!ac) return; const voices=[[260,.0],[340,.05],[210,.11],[420,.03]]; for(const [f0,d0] of voices){ for(let i=0;i<9;i++){ const t0=ac.currentTime+d0+i*.17+rnd()*.03, o=ac.createOscillator(), g=ac.createGain(), bp=ac.createBiquadFilter();
     o.type='sawtooth'; o.frequency.setValueAtTime(f0*(1.15-i*.025),t0); o.frequency.exponentialRampToValueAtTime(f0*.8,t0+.12); bp.type='bandpass'; bp.frequency.value=900; bp.Q.value=1.2;
     g.gain.setValueAtTime(.0001,t0); g.gain.exponentialRampToValueAtTime(.09,t0+.02); g.gain.exponentialRampToValueAtTime(.0001,t0+.13); o.connect(bp).connect(g).connect(ac.destination); o.start(t0); o.stop(t0+.15); } } noise(1.7,.08,1400); },
-  glitch:()=>{for(let i=0;i<6;i++) setTimeout(()=>tone(300+rnd()*1500,200+rnd()*800,.06,'square',.08),i*60);}, choke:()=>{noise(.6,.3,400);tone(260,180,.5,'triangle',.12);}, rage:()=>{tone(220,110,.55,'sawtooth',.14);noise(.4,.3,300);}, slam:()=>{noise(.45,1,150);tone(95,30,.55,'sine',1);}, snore:()=>{tone(120,90,.5,'sawtooth',.05);noise(.5,.12,250);}, lighter:()=>{noise(.06,.4,3000);setTimeout(()=>noise(.25,.15,1200),80);}, exhale:()=>noise(1.1,.3,450), cough:()=>{noise(.12,.35,700);setTimeout(()=>noise(.1,.3,650),160);}, feedback:()=>tone(1900,2500,.5,'sine',.07), cringe:()=>tone(330,250,.18,'square',.06), badum:()=>{tone(180,90,.15,'sine',.6);setTimeout(()=>tone(150,70,.15,'sine',.6),170);setTimeout(()=>noise(.5,.35,6000),340);}, pop:()=>{tone(900,1800,.12,'square',.15);setTimeout(()=>tone(1000,2000,.12,'square',.15),120);}, bell:()=>tone(1200,1100,.6,'sine',.25) };
+  glitch:()=>{for(let i=0;i<6;i++) setTimeout(()=>tone(300+rnd()*1500,200+rnd()*800,.06,'square',.08),i*60);}, choke:()=>{noise(.6,.3,400);tone(260,180,.5,'triangle',.12);}, rage:()=>{tone(220,110,.55,'sawtooth',.14);noise(.4,.3,300);}, slam:()=>{noise(.45,1,150);tone(95,30,.55,'sine',1);}, charge:()=>{tone(150,1100,.5,'sawtooth',.16);noise(.5,.25,2200);setTimeout(()=>tone(90,60,.25,'square',.2),380);}, snore:()=>{tone(120,90,.5,'sawtooth',.05);noise(.5,.12,250);}, lighter:()=>{noise(.06,.4,3000);setTimeout(()=>noise(.25,.15,1200),80);}, exhale:()=>noise(1.1,.3,450), cough:()=>{noise(.12,.35,700);setTimeout(()=>noise(.1,.3,650),160);}, feedback:()=>tone(1900,2500,.5,'sine',.07), cringe:()=>tone(330,250,.18,'square',.06), badum:()=>{tone(180,90,.15,'sine',.6);setTimeout(()=>tone(150,70,.15,'sine',.6),170);setTimeout(()=>noise(.5,.35,6000),340);}, pop:()=>{tone(900,1800,.12,'square',.15);setTimeout(()=>tone(1000,2000,.12,'square',.15),120);}, bell:()=>tone(1200,1100,.6,'sine',.25) };
 
 /* ---------- helpers ---------- */
 const lerp=(a,b,t)=>a+(b-a)*t, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), rnd=Math.random;
@@ -376,31 +376,31 @@ const shade=(hex,f)=>{const n=parseInt(hex.slice(1),16);const c=[n>>16,n>>8&255,
 
 /* ---------- roster: add more friends here ---------- */
 const ROSTER={
-  ayaan:{ key:'ayaan', name:'AYAAN', title:'THE TANK', head:headA, chin:.5, headH:126, hp:1100, speed:250, jumpV:800, bulk:1.25, ls:1.05, torso:96,
+  ayaan:{ key:'ayaan', name:'AYAAN', title:'THE TANK', head:headA, chin:.5, headH:126, hp:220, speed:250, jumpV:800, bulk:1.25, ls:1.05, torso:96,
     skin:'#a06a4f', shirt:'#4b5674', pants:'#24262e', shoe:'#f1f1f1', sole:'#e2341d', chest:'Ayaan',
     moves:{ punch:{dmg:8,dur:.3,on:.06,off:.16,reach:120,y:235,meter:12,push:45},
             kick:{dmg:13,dur:.48,on:.14,off:.28,reach:150,y:150,meter:16,push:80,heavy:true},
             special:{kind:'cry',dmg:26,dur:1.45,kickAt:1.0,cost:50,name:'CRY BABY TRAP!',push:150,heavy:true,reach:175,meter:0,lure:"Aww bro, don't cry..."},
             special2:{kind:'smoke',dur:1.2,puffAt:.6,dashAt:.7,pdDmg:38,cost:50,name:'CHHOTI ADVANCE!',time:4.5,width:320} } },
-  aditya:{ key:'aditya', name:'ADI BHAI', title:'THE GYM BOI', head:headB, chin:.46, headH:126, hp:980, speed:320, jumpV:880, bulk:.95, arms:1.35, vtaper:true, ls:1.03, torso:94,
+  aditya:{ key:'aditya', name:'ADI BHAI', title:'THE GYM BOI', head:headB, chin:.46, headH:126, hp:200, speed:320, jumpV:880, bulk:.95, arms:1.35, vtaper:true, ls:1.03, torso:94,
     skin:'#a46f4a', shirt:'#1d1d24', pants:'#3b4a63', shoe:'#f4f4f4', sole:'#1f8cf0', sleeveless:true, shorts:true, chest:'75 HARD', catch:'RAM RAM BHAIYO!', voice:'राम राम भाइयो',
     moves:{ punch:{dmg:9,dur:.26,on:.06,off:.14,reach:122,y:245,meter:12,push:55,heavy:true},
             kick:{dmg:10,dur:.42,on:.12,off:.25,reach:160,y:160,meter:14,push:60},
             special:{kind:'standup',dmg:30,dur:2.3,ticks:5,cost:50,name:'UNBEARABLE STAND-UP!',meter:0},
             special2:{kind:'sleep',dmg:32,kickAt:1.1,cost:50,name:'FAKE SLEEP!',push:180,heavy:true,reach:200,meter:0,lure:'Oye Adi, uth ja bhai!'} } },
-  john:{ key:'john', name:'JOHN PETER', title:'THE SHORT FUSE', head:headC, chin:.54, headH:124, hp:900, speed:370, jumpV:940, bulk:.85, ls:1.0, torso:90,
+  john:{ key:'john', name:'JOHN PETER', title:'THE SHORT FUSE', head:headC, chin:.54, headH:124, hp:190, speed:370, jumpV:940, bulk:.85, ls:1.0, torso:90,
     skin:'#a67a5e', shirt:'#f3f3ee', hoops:'#1f6b3a', shortSleeves:true, pants:'#1c1f2a', shoe:'#f4f4f4', sole:'#1f6b3a', chest:'',
     moves:{ punch:{dmg:6,dur:.22,on:.05,off:.12,reach:118,y:240,meter:13,push:30},
             kick:{dmg:10,dur:.4,on:.11,off:.24,reach:158,y:155,meter:15,push:60},
             special:{kind:'rage',dmg:30,shout:.6,flip:.36,cost:50,name:'RAAND ATTACK!',push:140,heavy:true,meter:0,
                      line:'ISS RAAND KI BAAT SUNEGA KYA?',voice:'इस रांड की बात सुनेगा क्या?'} } },
-  uncle:{ key:'uncle', name:'UPADHYAY UNCLE', title:'THE CHEAT CODE', head:headD, chin:.52, headH:124, hp:940, speed:255, jumpV:800, bulk:1.1, ls:1.05, torso:96,
+  uncle:{ key:'uncle', name:'UPADHYAY UNCLE', title:'THE CHEAT CODE', head:headD, chin:.52, headH:124, hp:195, speed:255, jumpV:800, bulk:1.1, ls:1.05, torso:96,
     skin:'#a8704e', shirt:'#9c9ea3', pants:'#9a9ca1', shoe:'#1b1b1b', sole:'#3a2a1a', suit:true, chest:'',
     moves:{ punch:{dmg:6,dur:.3,on:.07,off:.15,reach:115,y:240,meter:10,push:35},
             kick:{dmg:9,dur:.5,on:.15,off:.27,reach:145,y:150,meter:12,push:60},
             special:{kind:'cheat',dmg:20,dur:2.0,grab:.5,release:1.6,ticks:3,cost:50,name:'UNCLE CHEAT CODE!',push:130,heavy:true,meter:0,
                      line:'TERI BIWI CHOD DUNGA!',voice:'तेरी बीवी चोद दूंगा'} } },
-  madhav:{ key:'madhav', name:'MADHAV', title:'THE PETROL BOY', head:headE, chin:.53, headH:122, hp:960, speed:330, jumpV:900, bulk:.92, ls:1.12, torso:100,
+  madhav:{ key:'madhav', name:'MADHAV', title:'THE PETROL BOY', head:headE, chin:.53, headH:122, hp:200, speed:330, jumpV:900, bulk:.92, ls:1.12, torso:100,
     skin:'#a27f72', shirt:'#1e1e24', pants:'#2b2e36', shoe:'#f2f2f2', sole:'#d63a1a', hoodie:true, chest:'', catch:'Tanki full kar di!',
     moves:{ punch:{dmg:7,dur:.26,on:.06,off:.14,reach:128,y:250,meter:12,push:40},
             kick:{dmg:11,dur:.44,on:.12,off:.26,reach:170,y:160,meter:14,push:70,heavy:true},
@@ -471,15 +471,16 @@ fsBtn.addEventListener('click',async()=>{ try{ if(document.fullscreenElement) aw
 document.addEventListener('fullscreenchange',()=>{ fsBtn.textContent=document.fullscreenElement?'✕ Exit full screen':'⛶ Full screen'; });
 
 /* ---------- effects ---------- */
-let puddles=[], clouds=[], fx=[], nums=[], shots=[], banners=[], shake=0, hitstop=0;
+let puddles=[], clouds=[], fx=[], nums=[], shots=[], banners=[], warns=[], shake=0, hitstop=0;
 function sparks(x,y,dir,cols,n){ rec('sparks',[x,y,dir,cols,n]); for(let i=0;i<n;i++) fx.push({x,y,vx:(rnd()*.8+.2)*dir*600*(rnd()<.2?-1:1),vy:(rnd()-.7)*600,t:0,life:.3+rnd()*.2,c:cols[i%cols.length]}); }
+function slamWarn(x,y,label,freeze){ rec('slamWarn',[x,y,label,0]); warns.push({x,y,label,t0:performance.now()}); sfx.charge(); if(freeze&&G.mode!=='guest') hitstop=Math.max(hitstop,.34); }
 function banner(txt,o={}){ rec('banner',[txt,o]); if(o.big) banners=banners.filter(b=>!b.big); banners.push({txt,t:0,...o}); }
 
 /* ---------- fighter ---------- */
 /* ---------- online play (room capability) ---------- */
 const NET={role:null,lobby:null,room:null,code:null,ev:[],seq:0,lastSeq:0,lastV:-1,v:0,friend:null,myCount:{},sentKey:'',remoteCount:{},resShown:false,avail:null,msg:''};
 function rec(f,a){ if(G.mode!=='host') return; NET.ev.push({i:++NET.seq,f,a:[...a].map(x=>x&&x.d&&x.slot!==undefined?{F:x.slot}:x),at:performance.now()}); }
-function replay(e){ const a=e.a.map(x=>x&&typeof x==='object'&&'F' in x?G.fighters[x.F]:x); try{ if(e.f.slice(0,4)==='sfx.') sfx[e.f.slice(4)]?.(...a); else ({banner,sparks,dust,splashFx,earsOff,speak})[e.f]?.(...a); }catch(_){} }
+function replay(e){ const a=e.a.map(x=>x&&typeof x==='object'&&'F' in x?G.fighters[x.F]:x); try{ if(e.f.slice(0,4)==='sfx.') sfx[e.f.slice(4)]?.(...a); else ({banner,sparks,dust,splashFx,earsOff,speak,slamWarn})[e.f]?.(...a); }catch(_){} }
 function mkPuffs(seed,w){ let t=seed>>>0; const r=()=>{ t+=0x6D2B79F5; let x=Math.imul(t^t>>>15,1|t); x^=x+Math.imul(x^x>>>7,61|x); return ((x^x>>>14)>>>0)/4294967296; };
   const p=[]; for(let i=0;i<26;i++) p.push({ox:(r()-.5)*w,oy:-20-r()*300,r:45+r()*45,ph:r()*6}); return p; }
 class Fighter{
@@ -508,7 +509,7 @@ class Fighter{
           if(gap>0) this.x+=this.dir*Math.min(gap,1100*dt); else if(rnd()<dt*30) drip(this);
           if((gap<=6 && opp.state!=='ko') || this.t>.75){ this.pbSplash=this.t; sfx.splash(); splashFx(this,opp);
             if(gap<=60 && opp.state!=='ko' && G.phase==='fight' && opp.grounded){ opp.set('slipping'); opp.slipBy=this; puddles.push({x:opp.x,t:0,life:4}); } else this.pbFail=true; } }
-        else if(!this.pbFail && !this.pbLift){ if(opp.state!=='slipping') this.pbFail=true; else if(this.t>=this.pbSplash+.55){ this.pbLift=this.t; opp.set('lifted'); opp.liftBy=this; sfx.grab(); } }
+        else if(!this.pbFail && !this.pbLift){ if(opp.state!=='slipping') this.pbFail=true; else if(this.t>=this.pbSplash+.55){ this.pbLift=this.t; opp.set('lifted'); opp.liftBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'POWERBOMB',1); } }
         else if(this.pbLift && !this.pbImpact){
           if(opp.state!=='lifted'){ this.pbFail=true; this.pbImpact=this.t; }
           else { const k=clamp((this.t-this.pbLift)/.3,0,1); opp.x=this.x+this.dir*(30+50*k); opp.y=this.y-210*k; opp.vy=0; opp.dir=this.dir;
@@ -532,7 +533,7 @@ class Fighter{
         if(this.t<mv.shout){ if(!this.rageSaid){ this.rageSaid=true; this.say={txt:mv.line,t:0}; speak(mv.voice); sfx.rage(); } if(rnd()<dt*35) steam(this); }
         else if(!this.sxT && !this.sxFail){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+8);
           if(gap>0) this.x+=this.dir*Math.min(gap,1500*dt);
-          if(gap<=6 && opp.grounded && opp.state!=='ko' && G.phase==='fight'){ this.sxT=this.t; opp.set('suplexed'); opp.sxBy=this; sfx.grab(); }
+          if(gap<=6 && opp.grounded && opp.state!=='ko' && G.phase==='fight'){ this.sxT=this.t; opp.set('suplexed'); opp.sxBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'SUPLEX',1); }
           else if(this.t>mv.shout+.5) this.sxFail=true; }
         else if(this.sxT && !this.sxLand){ const k=clamp((this.t-this.sxT)/mv.flip,0,1), R=this.half+opp.half+6;
           if(opp.state!=='suplexed'){ this.sxFail=true; this.sxLand=this.t; }
@@ -571,7 +572,7 @@ class Fighter{
         if(opp.state==='ko' || G.phase!=='fight' || Math.abs(opp.x-this.x)>650) this.pdSkip=true; else this.pdStart=this.t; }
       if(this.pdStart && !this.bT){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+12);
         if(gap>0) this.x+=this.dir*Math.min(gap,1500*dt);
-        if(gap<=6 && opp.grounded && opp.state!=='ko'){ this.bT=this.t; opp.set('busted'); opp.bustedBy=this; sfx.grab(); }
+        if(gap<=6 && opp.grounded && opp.state!=='ko'){ this.bT=this.t; opp.set('busted'); opp.bustedBy=this; sfx.grab(); slamWarn(opp.x,GROUND-170,'PEDIGREE',1); }
         else if(this.t-this.pdStart>.55) this.pdSkip=true; }
       if(this.bT && !this.impactT){
         opp.x=this.x+this.dir*(this.half+opp.half-34); opp.y=this.y*.85; opp.vy=0; opp.dir=-this.dir;
@@ -776,7 +777,7 @@ function trap(f,opp,mv,dt,hitY){
       opp.x+=Math.sign(dx)*Math.min(Math.abs(dx),420*dt); opp.dir=f.x>=opp.x?1:-1; if(Math.abs(dx)>2) opp.walkP+=dt*11; arrived=Math.abs(dx)<8; }
     if(f.t>=mv.kickAt && (arrived || f.t>=mv.kickAt+1)){ f.kickT=f.t; sfx.swing();
       if(mv.kind==='sleep'){ const dist=(opp.x-f.x)*f.dir;
-        if(opp.state==='console' && dist>0 && dist<mv.reach+opp.half){ f.rkoT=f.t; f.vy=-700; opp.set('rkoed'); opp.rkoBy=f; banner('OUTTA NOWHERE!',{side:f.slot}); }
+        if(opp.state==='console' && dist>0 && dist<mv.reach+opp.half){ f.rkoT=f.t; f.vy=-700; opp.set('rkoed'); opp.rkoBy=f; banner('OUTTA NOWHERE!',{side:f.slot}); slamWarn(opp.x,GROUND-170,'RKO',1); }
         else if(opp.state==='console') opp.set('idle');
         return; }
       if(opp.state==='console') opp.set('idle');
@@ -1004,6 +1005,21 @@ function portrait(img,x,flip){ ctx.fillStyle='#1a1210'; ctx.beginPath(); ctx.arc
   ctx.lineWidth=5; ctx.strokeStyle='#f4c21b'; ctx.beginPath(); ctx.arc(x,70,46,0,7); ctx.stroke(); }
 function bar(x,y,w,h,f,c,rev){ ctx.fillStyle='#1a1210'; ctx.fillRect(x-4,y-4,w+8,h+8); ctx.fillStyle='#4a2a1a'; ctx.fillRect(x,y,w,h);
   const fw=w*clamp(f,0,1); ctx.fillStyle=c; ctx.fillRect(rev?x+w-fw:x,y,fw,h); ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fillRect(rev?x+w-fw:x,y,fw,h*.35); }
+function drawWarns(){ const now=performance.now(); warns=warns.filter(w=>now-w.t0<650);
+  for(const w of warns){ const k=(now-w.t0)/650, e=1-Math.pow(1-Math.min(1,k/.75),3), fade=k>.75?(1-k)/.25:1;
+    ctx.save(); ctx.globalAlpha=fade;
+    // dark red vignette
+    const v=ctx.createRadialGradient(w.x,w.y,60,w.x,w.y,W*.75); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(120,0,0,'+(.62*Math.min(1,k*6))+')'); ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+    // speed lines converging on the victim
+    ctx.strokeStyle='rgba(255,230,140,.8)'; ctx.lineWidth=3; for(let i=0;i<20;i++){ const a=i/20*Math.PI*2+.15, r1=70+(1-e)*420, r2=r1+110+(1-e)*60; ctx.beginPath(); ctx.moveTo(w.x+Math.cos(a)*r1,w.y+Math.sin(a)*r1*.8); ctx.lineTo(w.x+Math.cos(a)*r2,w.y+Math.sin(a)*r2*.8); ctx.stroke(); }
+    // converging target rings
+    const r=60+(1-e)*230; ctx.lineWidth=10; ctx.strokeStyle='#ff3b2a'; ctx.beginPath(); ctx.arc(w.x,w.y,r,0,7); ctx.stroke();
+    ctx.lineWidth=4; ctx.strokeStyle='#fff3b0'; ctx.beginPath(); ctx.arc(w.x,w.y,r*.72+8,0,7); ctx.stroke();
+    // crosshair ticks
+    ctx.strokeStyle='#ff3b2a'; ctx.lineWidth=6; for(let i=0;i<4;i++){ const a=i*Math.PI/2+e*1.2; ctx.beginPath(); ctx.moveTo(w.x+Math.cos(a)*(r-22),w.y+Math.sin(a)*(r-22)); ctx.lineTo(w.x+Math.cos(a)*(r+26),w.y+Math.sin(a)*(r+26)); ctx.stroke(); }
+    // label + exclamation, shaking
+    const sh=(1-e)*8; const lx=w.x+(rnd()-.5)*sh, ly=w.y-r-26+(rnd()-.5)*sh; txt('! '+w.label+' !',Math.max(200,Math.min(W-200,lx)),Math.max(60,ly),(Math.round(44+16*Math.sin(k*20)))+'px Bungee','#ffd23a','center');
+    ctx.restore(); } ctx.globalAlpha=1; }
 function txt(s,x,y,f,c,al,stroke=true){ ctx.font=f; ctx.textAlign=al; if(stroke){ ctx.lineWidth=6; ctx.strokeStyle='#1a1210'; ctx.lineJoin='round'; ctx.strokeText(s,x,y);} ctx.fillStyle=c; ctx.fillText(s,x,y); }
 function hud(){
   const [a,b]=G.fighters; if(!a) return;
@@ -1063,6 +1079,7 @@ function step(now){
   if(a) [a,b].forEach(overlays);
   for(const n of nums){ ctx.globalAlpha=1-n.t/.8; txt(String(n.v),n.x,n.y-n.t*80,'34px Bungee',n.c,'center'); } ctx.globalAlpha=1;
   ctx.restore();
+  drawWarns();
   if(active) hud();
   for(const bn of banners){ const life=bn.big?1.4:1.1, k=Math.min(1,bn.t*8); ctx.globalAlpha=clamp((life-bn.t)*3,0,1);
     const x=bn.side===0?W*.28:bn.side===1?W*.72:W/2;
@@ -1070,7 +1087,7 @@ function step(now){
   ctx.globalAlpha=1;
   requestAnimationFrame(step);
 }
-requestAnimationFrame(step);
+window.__dbg={cpu,inputs,slamWarn}; requestAnimationFrame(step);
 }
 </script>
 </body>
