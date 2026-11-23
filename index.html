@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Yaari Brawl</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
@@ -15,6 +15,10 @@
 :root{color-scheme:light dark;--bg:light-dark(#f4c21b,#1d130a);--ink:light-dark(#1a1210,#fbe7b5);--card:light-dark(#fff6da,#2c1d10);--red:#e2341d;--line:light-dark(#1a1210,#f4c21b)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
+html,body,button,a,input{touch-action:manipulation}
+.cab,.cab *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.cab input{-webkit-user-select:text;user-select:text}
+.screen,#touch,#touch *{touch-action:none}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Rubik,system-ui,sans-serif;overflow-x:clip}
 .band{padding:clamp(16px,3vw,36px) max(4vw,12px)}
 .wrap{max-width:1240px;margin:0 auto}
@@ -346,7 +350,13 @@ const over=document.getElementById('over'), menuSelect=document.getElementById('
 
 /* ---------- audio ---------- */
 let ac=null;
-function audio(){ if(!ac){ try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(ac&&ac.state==='suspended') ac.resume().catch(()=>{}); }
+function audio(){ if(!ac){ try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(ac&&ac.state!=='running') ac.resume().catch(()=>{}); }
+let unlocked=false, voices=[];
+function loadVoices(){ try{ voices=window.speechSynthesis?speechSynthesis.getVoices():[]; }catch(_){} }
+loadVoices(); try{ window.speechSynthesis&&speechSynthesis.addEventListener('voiceschanged',loadVoices); }catch(_){}
+function unlockAudio(){ audio(); if(ac){ try{ const b=ac.createBuffer(1,1,22050), src=ac.createBufferSource(); src.buffer=b; src.connect(ac.destination); src.start(0); }catch(_){} }
+  if(!unlocked){ unlocked=true; try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }catch(_){} loadVoices(); } }
+for(const ev of ['touchend','pointerdown','click','keydown']) document.addEventListener(ev,unlockAudio,{capture:true,passive:true});
 function tone(f1,f2,dur,type,vol){ if(!ac) return; const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;
   o.type=type; o.frequency.setValueAtTime(f1,t); o.frequency.exponentialRampToValueAtTime(f2,t+dur);
   g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.001,t+dur); o.connect(g).connect(ac.destination); o.start(t); o.stop(t+dur); }
@@ -449,6 +459,13 @@ function mkPad(inp){
     for(const ev of ['pointerup','pointercancel','lostpointercapture']) b.addEventListener(ev,()=>{ inp.held.delete(k); b.classList.remove('on'); });
     b.addEventListener('contextmenu',e=>e.preventDefault()); p.append(b); }
   return p; }
+// no double-tap / pinch zoom anywhere in the game cabinet (iOS ignores the viewport hint)
+{ const cab=document.querySelector('.cab'); let lastTap=0;
+  cab.addEventListener('touchend',e=>{ if(e.target.closest('input,button,a,.joy')) return; const now=Date.now(); if(now-lastTap<350) e.preventDefault(); lastTap=now; },{passive:false});
+  document.getElementById('cv').addEventListener('touchstart',e=>e.preventDefault(),{passive:false});
+  touchEl.addEventListener('touchstart',e=>{ if(e.target.closest('.joy,.rb,.tb')) e.preventDefault(); },{passive:false});
+  document.addEventListener('dblclick',e=>{ if(e.target.closest('.cab')) e.preventDefault(); },{passive:false});
+  for(const ev of ['gesturestart','gesturechange']) document.addEventListener(ev,e=>{ if(document.body.classList.contains('playing')||e.target.closest?.('.cab')) e.preventDefault(); },{passive:false}); }
 const fsBtn=document.getElementById('fsBtn'); document.getElementById('menuBtn').addEventListener('click',showMenu);
 fsBtn.addEventListener('click',async()=>{ try{ if(document.fullscreenElement) await document.exitFullscreen(); else { await document.documentElement.requestFullscreen(); try{ await screen.orientation.lock('landscape'); }catch(_){} } }catch(_){ fsBtn.textContent='Turn phone sideways'; } });
 document.addEventListener('fullscreenchange',()=>{ fsBtn.textContent=document.fullscreenElement?'✕ Exit full screen':'⛶ Full screen'; });
@@ -787,8 +804,10 @@ function bubble(x,y,s){ ctx.font='600 20px Rubik,sans-serif'; const w=ctx.measur
   ctx.fillStyle='#1a1210'; ctx.textAlign='center'; ctx.fillText(s,x,y-6); }
 function say(f){ if(!f.d.catch) return; f.say={txt:f.d.catch,t:0}; speak(f.d.voice||f.d.catch); }
 function speak(text){ rec('speak',[text]);
-  try{ const sy=window.speechSynthesis; if(!sy) return; sy.cancel(); const u=new SpeechSynthesisUtterance(text);
-    const v=sy.getVoices().find(v=>/^hi/i.test(v.lang)); if(v) u.voice=v; u.lang='hi-IN'; u.rate=1.05; u.pitch=.85; u.volume=1; sy.speak(u); }catch(e){} }
+  try{ const sy=window.speechSynthesis; if(!sy) return; if(!voices.length) loadVoices();
+    const u=new SpeechSynthesisUtterance(text); const v=voices.find(v=>/^hi/i.test(v.lang))||voices.find(v=>/en.IN/i.test(v.lang)); if(v){ u.voice=v; u.lang=v.lang; } else u.lang='hi-IN';
+    u.rate=1.05; u.pitch=.85; u.volume=1;
+    if(sy.speaking||sy.pending){ sy.cancel(); setTimeout(()=>sy.speak(u),80); } else sy.speak(u); if(sy.paused) sy.resume(); }catch(e){} }
 function sp2(f){ return f.d.moves.special2&&f.d.moves.special2.kind; }
 function overlays(f){
   if(f.say){ f.say.t+=1/60; if(f.say.t<1.5) bubble(clamp(f.x,170,W-170),Math.min(GROUND+f.y-(f.d.torso+104*f.d.ls)-205,192),f.say.txt); else f.say=null; } const sp=f.d.moves.special, y=GROUND+f.y-(f.d.torso+104*f.d.ls)-150;
