@@ -153,7 +153,7 @@ body.playing .topnav{display:none}
             <button class="fc" data-f="john"><span class="badge"></span><img alt=""><h2>JOHN PETER</h2><div class="tag">THE SHORT FUSE<br><span style="white-space:nowrap">5′5″ · 59 kg</span></div><div class="stats"><div class="stat"><span>Power</span><div class="bar"><i style="width:70%"></i></div></div><div class="stat"><span>Defense</span><div class="bar"><i style="width:45%"></i></div></div><div class="stat"><span>Speed</span><div class="bar"><i style="width:95%"></i></div></div></div></button>
             <button class="fc" data-f="uncle"><span class="badge"></span><img alt=""><h2>UPADHYAY UNCLE</h2><div class="tag">THE CHEAT CODE<br><span style="white-space:nowrap">5′7″ · 70 kg</span></div><div class="stats"><div class="stat"><span>Power</span><div class="bar"><i style="width:60%"></i></div></div><div class="stat"><span>Defense</span><div class="bar"><i style="width:60%"></i></div></div><div class="stat"><span>Speed</span><div class="bar"><i style="width:45%"></i></div></div></div></button>
             <button class="fc" data-f="madhav"><span class="badge"></span><img alt=""><h2>MADHAV</h2><div class="tag">THE PETROL BOY<br><span style="white-space:nowrap">5′9″ · 65 kg</span></div><div class="stats"><div class="stat"><span>Power</span><div class="bar"><i style="width:85%"></i></div></div><div class="stat"><span>Defense</span><div class="bar"><i style="width:55%"></i></div></div><div class="stat"><span>Speed</span><div class="bar"><i style="width:80%"></i></div></div></div></button>
-            <button class="fc" data-f="hitesh"><span class="badge"></span><img alt=""><h2>HARYANA HOOD</h2><div class="tag">THE PRO BOXER<br><span style="white-space:nowrap">Hitesh</span></div><div class="stats"><div class="stat"><span>Power</span><div class="bar"><i style="width:88%"></i></div></div><div class="stat"><span>Defense</span><div class="bar"><i style="width:62%"></i></div></div><div class="stat"><span>Speed</span><div class="bar"><i style="width:82%"></i></div></div></div></button>
+            <button class="fc" data-f="hitesh"><span class="badge"></span><img alt=""><h2>HITESH BOXER</h2><div class="tag">THE PRO BOXER<br><span style="white-space:nowrap">Haryana Hood</span></div><div class="stats"><div class="stat"><span>Power</span><div class="bar"><i style="width:88%"></i></div></div><div class="stat"><span>Defense</span><div class="bar"><i style="width:62%"></i></div></div><div class="stat"><span>Speed</span><div class="bar"><i style="width:82%"></i></div></div></div></button>
           </div>
           <div id="online" hidden><p id="netStatus"></p><div id="netList"></div><form id="codeJoin" class="codejoin"><label for="codeIn">Friend’s code</label><input id="codeIn" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD"><button id="codeBtn" type="submit">Join</button></form><div class="btns"><button id="hostBtn" class="alt">Host a match</button><button id="leaveBtn" class="alt" hidden>Leave match</button></div></div>
           <div class="btns"><button id="fightBtn" disabled>Fight!</button></div>
@@ -246,12 +246,12 @@ body.playing .topnav{display:none}
       </table>
     </div>
     <div class="card">
-      <h3>Haryana Hood · The Pro Boxer</h3>
-      <p style="margin:0">Hitesh, the colony's real boxer. Gloves always on, fastest hands in the game.</p>
+      <h3>Hitesh Boxer · The Pro Boxer</h3>
+      <p style="margin:0">The colony's real boxer, repping Haryana Hood on his tee. Gloves always on, fastest hands in the game.</p>
       <table style="margin-top:8px">
         <tr><td>Boxer's jab</td><td>8 dmg, very quick</td></tr>
         <tr><td>Kick</td><td>9 dmg</td></tr>
-        <tr><td>Haryana Hood</td><td>Rushes in, pins the opponent and lands 20 punches in a row, finishing with a big uppercut. About 35 dmg</td></tr>
+        <tr><td>Desi Haryana Jabs</td><td>Rushes in, pins the opponent and lands 20 punches in a row, finishing with a big uppercut. About 35 dmg</td></tr>
       </table>
     </div>
   </div>
@@ -415,11 +415,11 @@ const ROSTER={
     moves:{ punch:{dmg:7,dur:.26,on:.06,off:.14,reach:128,y:250,meter:12,push:40},
             kick:{dmg:11,dur:.44,on:.12,off:.26,reach:170,y:160,meter:14,push:70,heavy:true},
             special:{kind:'petrol',dmg:34,cost:50,name:'PETROL CHORI!',meter:0} } },
-  hitesh:{ key:'hitesh', name:'HARYANA HOOD', title:'THE PRO BOXER', head:headF, chin:.5, headH:124, hp:210, speed:320, jumpV:860, bulk:1.02, ls:1.07, torso:98,
-    skin:'#b07a5c', shirt:'#c4262b', plaid:'#141416', pants:'#18181b', shoe:'#1d1d22', sole:'#d8262b', gloves:'#d81f26', chest:'', catch:'Le, Haryana ka mukka!', voice:'ले, हरियाणा का मुक्का!',
+  hitesh:{ key:'hitesh', name:'HITESH BOXER', title:'THE PRO BOXER', head:headF, chin:.5, headH:124, hp:210, speed:320, jumpV:860, bulk:1.02, ls:1.07, torso:98,
+    skin:'#b07a5c', shirt:'#1c1c21', shortSleeves:true, tee:['HARYANA','HOOD'], pants:'#18181b', shoe:'#1d1d22', sole:'#d8262b', gloves:'#d81f26', chest:'', catch:'Le, Haryana ka mukka!', voice:'ले, हरियाणा का मुक्का!',
     moves:{ punch:{dmg:8,dur:.22,on:.04,off:.12,reach:126,y:245,meter:13,push:40},
             kick:{dmg:9,dur:.44,on:.13,off:.26,reach:150,y:155,meter:13,push:55},
-            special:{kind:'flurry',hits:20,gap:.085,final:7,cost:50,name:'HARYANA HOOD!',push:220,heavy:true,meter:0} } }
+            special:{kind:'flurry',hits:20,gap:.085,final:7,cost:50,name:'DESI HARYANA JABS!',push:220,heavy:true,meter:0} } }
 };
 
 for(const k of Object.keys(sfx)){ const o=sfx[k]; sfx[k]=(...a)=>{ rec('sfx.'+k,a); return o(...a); }; }
@@ -774,6 +774,9 @@ class Fighter{
     if(d.kurta){ ctx.fillStyle=shade(d.shirt,.72); ctx.fillRect(4,top+4,5,40); for(let i=0;i<3;i++) ball([6.5,top+14+i*11],3,'#8a6a18',1);
       ctx.fillStyle=shade(d.shirt,.8); ctx.beginPath(); ctx.roundRect(-12,top-6,26,9,4); ctx.fill(); }
     else { ctx.fillStyle=shade(d.shirt,.72); ctx.fillRect(-ww,-4,ww*2+6,10); ctx.textAlign='center'; if(d.vtaper){ ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-20,top+24); ctx.quadraticCurveTo(-4,top+38,6,top+30); ctx.quadraticCurveTo(16,top+38,32,top+24); ctx.stroke(); ctx.fillStyle='#ffd23f'; ctx.font='800 14px Rubik,sans-serif'; ctx.save(); ctx.translate(6,top/2+16); ctx.scale(this.dir,1); ctx.fillText(d.chest,0,0); ctx.restore(); } else { ctx.fillStyle='rgba(255,255,255,.85)'; if(d.chest){ ctx.font='italic 700 17px Georgia,serif'; } ctx.save(); ctx.translate(6,top/2+6); ctx.scale(this.dir,1); ctx.fillText(d.chest,0,0); ctx.restore(); }
+    if(d.tee){ ctx.save(); ctx.translate(-7,top/2+10); ctx.scale(this.dir,1); ctx.textAlign='center'; ctx.lineJoin='round';
+      ctx.font='400 11px Bungee,Impact,sans-serif'; ctx.lineWidth=3.5; ctx.strokeStyle='#7a0f12'; ctx.strokeText(d.tee[0],0,-4); ctx.fillStyle='#ffd23f'; ctx.fillText(d.tee[0],0,-4);
+      ctx.font='400 16px Bungee,Impact,sans-serif'; ctx.strokeText(d.tee[1],0,13); ctx.fillStyle='#e8262c'; ctx.fillText(d.tee[1],0,13); ctx.restore(); }
       const pg=ctx.createLinearGradient(0,4,0,16); pg.addColorStop(0,shade(d.pants,1.3)); pg.addColorStop(1,shade(d.pants,.7)); ctx.fillStyle=pg; ctx.fillRect(-ww,4,ww*2+6,12);
       ctx.fillStyle=shade(d.shirt,.75); ctx.beginPath(); ctx.ellipse(0,top-4,18,7,0,0,7); ctx.fill(); }
     if(d.hoodie){ ctx.fillStyle=shade(d.shirt,.75); ctx.beginPath(); ctx.ellipse(-8,top-6,30,16,0,0,7); ctx.fill(); ctx.strokeStyle='#e6e6e6'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-4,top+2); ctx.lineTo(-6,top+40); ctx.moveTo(12,top+2); ctx.lineTo(14,top+40); ctx.stroke();
