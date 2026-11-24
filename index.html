@@ -404,11 +404,11 @@ const ROSTER={
             kick:{dmg:10,dur:.4,on:.11,off:.24,reach:158,y:155,meter:15,push:60},
             special:{kind:'rage',dmg:30,shout:.6,flip:.36,cost:50,name:'RAAND ATTACK!',push:140,heavy:true,meter:0,
                      line:'ISS RAAND KI BAAT SUNEGA KYA?',voice:'इस रांड की बात सुनेगा क्या?'} } },
-  uncle:{ key:'uncle', name:'UPADHYAY UNCLE', title:'THE CHEAT CODE', head:headD, chin:.52, headH:124, hp:195, speed:255, jumpV:800, bulk:1.1, ls:1.05, torso:96,
+  uncle:{ key:'uncle', name:'UPADHYAY UNCLE', title:'THE CHEAT CODE', head:headD, chin:.52, headH:124, hp:195, speed:330, jumpV:820, bulk:1.1, ls:1.05, torso:96,
     skin:'#a8704e', shirt:'#9c9ea3', pants:'#9a9ca1', shoe:'#1b1b1b', sole:'#3a2a1a', suit:true, chest:'',
-    moves:{ punch:{dmg:6,dur:.3,on:.07,off:.15,reach:115,y:240,meter:10,push:35},
-            kick:{dmg:9,dur:.5,on:.15,off:.27,reach:145,y:150,meter:12,push:60},
-            special:{kind:'cheat',dmg:20,dur:2.0,grab:.5,release:1.6,ticks:3,cost:50,name:'UNCLE CHEAT CODE!',push:130,heavy:true,meter:0,
+    moves:{ punch:{dmg:6,dur:.22,on:.05,off:.12,reach:118,y:240,meter:10,push:35},
+            kick:{dmg:9,dur:.4,on:.11,off:.22,reach:148,y:150,meter:12,push:60},
+            special:{kind:'cheat',dmg:26,dur:1.6,grab:.22,release:1.25,ticks:3,cost:50,name:'UNCLE CHEAT CODE!',push:130,heavy:true,meter:0,
                      line:'TERI BIWI CHOD DUNGA!',voice:'तेरी बीवी चोद दूंगा'} } },
   madhav:{ key:'madhav', name:'MADHAV', title:'THE PETROL BOY', head:headE, chin:.53, headH:122, hp:200, speed:330, jumpV:900, bulk:.92, ls:1.12, torso:100,
     skin:'#a27f72', shirt:'#1e1e24', pants:'#2b2e36', shoe:'#f2f2f2', sole:'#d63a1a', hoodie:true, chest:'', catch:'Tanki full kar di!',
@@ -553,11 +553,11 @@ class Fighter{
         if(this.t>=mv.grab && !this.grabbed && opp.state!=='ko' && G.phase==='fight'){ this.grabbed=true;
           for(let i=0;i<16;i++) fx.push({x:this.x+(rnd()-.5)*60,y:GROUND-rnd()*260,vx:(rnd()-.5)*300,vy:(rnd()-.5)*300,t:0,life:.35,c:rnd()<.5?'#6dff8a':'#ff4bd8'});
           const behind=-(opp.dir||1); this.x=clamp(opp.x+behind*(opp.half+this.half-25),70,W-70); this.dir=Math.sign(opp.x-this.x)||1; this.y=0; this.vy=0;
-          opp.set('choked'); opp.chokedBy=this; this.say={txt:mv.line,t:0}; speak(mv.voice); sfx.choke(); }
+          opp.set('choked'); opp.chokedBy=this; this.say={txt:mv.line,t:0}; speak(mv.voice); sfx.choke(); slamWarn(opp.x,GROUND-170,'CHEAT CODE',1); }
         if(this.grabbed && !this.hitDone && opp.state==='choked'){
           opp.x=this.x+this.dir*(this.half+opp.half-25); opp.y=-26; opp.vy=0; opp.dir=this.dir;
           const tick=Math.floor((this.t-mv.grab)/.3); if(tick>(this.lastTick??-1) && tick<mv.ticks){ this.lastTick=tick; hurt(opp,this,4); }
-          if(this.t>=mv.release){ this.hitDone=true; opp.set('idle'); opp.takeHit({dmg:mv.dmg-12,push:mv.push,heavy:true,meter:0},this,opp.x,GROUND-200); } }
+          if(this.t>=mv.release){ this.hitDone=true; opp.set('idle'); opp.takeHit({dmg:mv.dmg-12,push:mv.push,heavy:true,meter:0,unblock:true},this,opp.x,GROUND-200); } }
       } else if(mv.kind==='rage'){
         if(this.t<mv.shout){ if(!this.rageSaid){ this.rageSaid=true; this.say={txt:mv.line,t:0}; speak(mv.voice); sfx.rage(); } if(rnd()<dt*35) steam(this); }
         else if(!this.sxT && !this.sxFail){ this.dir=Math.sign(opp.x-this.x)||this.dir; const gap=Math.abs(opp.x-this.x)-(this.half+opp.half+8);
@@ -639,7 +639,7 @@ class Fighter{
     this.x=clamp(this.x,70,W-70);
     const k=Math.min(1,dt*(this.state==='walk'?14:26)), tg=this.target(); for(const key in tg) this.pose[key]=lerp(this.pose[key],tg[key],k);
   }
-  slamming(){ const m=this.d.moves; if(this.state==='special') return ['rage','petrol','flurry'].includes(m.special.kind); if(this.state==='special2') return !!m.special2 && ['smoke','sleep'].includes(m.special2.kind); return false; }
+  slamming(){ const m=this.d.moves; if(this.state==='special') return ['rage','petrol','flurry','cheat'].includes(m.special.kind); if(this.state==='special2') return !!m.special2 && ['smoke','sleep'].includes(m.special2.kind); return false; }
   takeHit(mv,att,hx,hy){
     if(this.state==='ko'||G.phase!=='fight'||(this.inv>0&&!mv.unblock)) return;
     const blocking=!mv.unblock && this.state==='block' && Math.sign(att.x-this.x)===this.dir;
